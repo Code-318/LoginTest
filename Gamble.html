@@ -1,0 +1,84 @@
+<html>
+<head>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #cacaca;
+    }
+
+    .slot-container {
+      position: relative;
+      display: inline-block;
+    }
+
+    .slot-container img {
+      display: block;
+      width: 400px;
+    }
+
+    .number-container {
+      position: absolute;
+      top: 48%;
+      left: 46%;
+      transform: translateX(-50%);
+      width: 62%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 50px;
+}
+
+    .slot-number {
+      font-size: 48px;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+      width: 50px; 
+}
+
+    .pulley-button {
+      position: absolute;
+      bottom: 70px;
+      left: 95%;
+      transform: translateX(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .pulley-button img {
+      width: 65px;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="slot-container">
+    <img src="Slot.png" alt="Slot Machine">
+    <div class="number-container">
+      <div class="slot-number" id="slot1">0</div>
+      <div class="slot-number" id="slot2">0</div>
+      <div class="slot-number" id="slot3">0</div>
+    </div>
+    <button class="pulley-button" onclick="rollFunction()">
+      <img src="Pull.png" alt="Pull Button">
+    </button>
+  </div>
+
+  <script>
+    function rollFunction() {
+      const slot1 = Math.floor(Math.random() * 10);
+      const slot2 = Math.floor(Math.random() * 10);
+      const slot3 = Math.floor(Math.random() * 10);
+
+      document.getElementById('slot1').textContent = slot1;
+      document.getElementById('slot2').textContent = slot2;
+      document.getElementById('slot3').textContent = slot3;
+    }
+  </script>
+</body>
+</html>
