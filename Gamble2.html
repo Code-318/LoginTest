@@ -1,0 +1,232 @@
+<html>
+<head>
+  <style>
+    /* General styling */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #cacaca;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Money input overlay styling */
+    .money-input-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent black */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* Ensure it stays on top */
+    }
+
+    .money-input-box {
+      background-color: white;
+      padding: 20px 40px;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .money-input-box h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+
+    .money-input-box input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .money-input-box button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .money-input-box button:hover {
+      background-color: #218838;
+    }
+
+    /* Slot machine container styling */
+    .slot-container {
+      position: relative;
+      display: inline-block;
+      display: none; /* Initially hidden */
+    }
+
+    .slot-container img {
+      display: block;
+      width: 400px;
+    }
+
+    .number-container {
+      position: absolute;
+      top: 48%; /* Adjust for alignment */
+      left: 46%; /* Center the numbers within the slot */
+      transform: translateX(-50%);
+      width: 62%; /* Adjust based on the slot image */
+      display: flex;
+      justify-content: space-between;
+      padding: 0 50px;
+    }
+
+    .slot-number {
+      font-size: 48px; /* Adjust as needed */
+      font-weight: bold;
+      color: #333; /* Text color */
+      text-align: center;
+      width: 50px; /* Width of each number slot */
+    }
+
+    .pulley-button {
+      position: absolute;
+      bottom: 70px;
+      left: 95%;
+      transform: translateX(-50%);
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .pulley-button img {
+      width: 65px;
+      height: auto;
+    }
+
+    /* Money display styling */
+    .money-display {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 18px;
+      background: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .money-display input {
+      width: 80px;
+      font-size: 16px;
+      text-align: center;
+      margin-left: 10px;
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Money Input Overlay -->
+  <div class="money-input-overlay" id="moneyOverlay">
+    <div class="money-input-box">
+      <h1>Enter Money to Start</h1>
+      <input type="number" id="moneyInput" placeholder="Enter amount" min="1">
+      <input type="number" id="rollCostInput" placeholder="Roll Cost" min="1">
+      <button onclick="startGame()">Start</button>
+    </div>
+  </div>
+
+  <!-- Money Display -->
+  <div class="money-display" id="moneyDisplay" style="display: none;">
+    Money: $<span id="moneyTotal">0</span>
+    <br>
+    Roll Cost: $
+    <input type="number" id="rollCostField" value="0" min="1">
+  </div>
+
+  <!-- Slot Machine -->
+  <div class="slot-container" id="slotMachine">
+    <img src="Slot.png" alt="Slot Machine">
+    <div class="number-container">
+      <div class="slot-number" id="slot1">0</div>
+      <div class="slot-number" id="slot2">0</div>
+      <div class="slot-number" id="slot3">0</div>
+    </div>
+    <button class="pulley-button" onclick="rollFunction()">
+      <img src="Pull.png" alt="Pull Button">
+    </button>
+  </div>
+
+  <script>
+    let totalMoney = 0;
+    let rollCost = 0;
+
+    // Function to start the game
+    function startGame() {
+      const moneyInput = document.getElementById("moneyInput").value;
+      const rollCostInput = document.getElementById("rollCostInput").value;
+
+      if (moneyInput > 0 && rollCostInput > 0) {
+        totalMoney = parseFloat(moneyInput);
+        rollCost = parseFloat(rollCostInput);
+
+        // Update the display
+        document.getElementById("moneyTotal").textContent = totalMoney;
+        document.getElementById("rollCostField").value = rollCost;
+
+        // Hide the money input overlay and show game elements
+        document.getElementById("moneyOverlay").style.display = "none";
+        document.getElementById("slotMachine").style.display = "inline-block";
+        document.getElementById("moneyDisplay").style.display = "block";
+      } else {
+        alert("Please enter valid amounts for money and roll cost.");
+      }
+    }
+
+    // Function for slot machine roll
+    function rollFunction() {
+      rollCost = parseFloat(document.getElementById("rollCostField").value);
+
+      if (totalMoney < rollCost) {
+        alert("Not enough money to roll!");
+        return;
+      }
+
+      // Deduct roll cost
+      totalMoney -= rollCost;
+
+      // Generate random numbers
+      const slot1 = Math.floor(Math.random() * 10);
+      const slot2 = Math.floor(Math.random() * 10);
+      const slot3 = Math.floor(Math.random() * 10);
+
+      // Update the numbers on the screen
+      document.getElementById('slot1').textContent = slot1;
+      document.getElementById('slot2').textContent = slot2;
+      document.getElementById('slot3').textContent = slot3;
+
+      // Allow the user to see the updated slots before alerts
+      setTimeout(() => {
+        // Check for wins
+        if (slot1 === slot2 && slot2 === slot3) {
+          // Triple
+          totalMoney += rollCost * 12;
+          alert(`TRIPLE! You win $${rollCost * 15}!`);
+        } else if (slot1 === slot2 || slot1 === slot3 || slot2 === slot3) {
+          // Double
+          totalMoney += rollCost * 3;
+          alert(`DOUBLE! You win $${rollCost * 4}!`);
+        }
+
+        // Update the money display
+        document.getElementById("moneyTotal").textContent = totalMoney;
+      }, 100); // Small delay to let the UI update
+    }
+  </script>
+</body>
+</html>
